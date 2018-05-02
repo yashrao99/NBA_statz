@@ -15,10 +15,19 @@ import FirebaseAuthUI
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let dataController = DataController(modelName: "NBAstatz")
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        dataController.load()
+        
+        let navControl = window?.rootViewController as! AnimateViewController
+        navControl.dataController = dataController
+        
+//        let navController = window?.rootViewController as! UINavigationController
+//        let topController = navController.topViewController as! HomeViewController
+//        topController.dataController = dataController
         // Override point for customization after application launch.
         return true
     }

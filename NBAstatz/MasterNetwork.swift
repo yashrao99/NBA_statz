@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 import Firebase
 
 class MasterNetwork: NSObject {
@@ -32,8 +31,9 @@ class MasterNetwork: NSObject {
     }
     
     
-    func getRoster(_ url: URL, completionHandlerForRoster: @escaping (_ success: Bool,_ parsedResult: [String:AnyObject]?,_ error: String?) -> Void) {
+    func getRoster(_ url: URL, completionHandlerForRoster: @escaping (_ success: Bool,_ result: [PlayerInformation]?,_ error: String?) -> Void) {
         
+        var players : [PlayerInformation] = []
         let request = URLRequest(url: url)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) {data, response, error in
@@ -70,12 +70,17 @@ class MasterNetwork: NSObject {
                 return
             }
             
-            if let test = parsedResult["rowSet"] as? [String] {
-                print("true")
+            if let layerOne = parsedResult["resultSets"] as? NSArray {
+                if let layerTwo = layerOne[0] as? [String:AnyObject] {
+                    if let finalLayer = layerTwo["rowSet"] as? [NSArray] {
+                        for array in finalLayer {
+                            players.append(PlayerInformation(array: array))
+                            
+                        }
+                    }
+                }
             }
-            
-             completionHandlerForRoster(true, parsedResult, nil)
-            
+            completionHandlerForRoster(true, players , nil)
         }
         task.resume()
         
@@ -88,3 +93,4 @@ class MasterNetwork: NSObject {
         return Singleton.sharedInstance
     }
 }
+

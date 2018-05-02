@@ -10,14 +10,18 @@ import UIKit
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
 import Firebase
-import SwiftyJSON
+import CoreData
 
-class HomeViewController: UIViewController, AuthUIDelegate, UINavigationControllerDelegate, FUIAuthDelegate {
+class HomeViewController: UIViewController, AuthUIDelegate, UINavigationControllerDelegate, FUIAuthDelegate, NSFetchedResultsControllerDelegate {
 
     fileprivate var _authHandle: AuthStateDidChangeListenerHandle!
     var user: User?
     var displayName: String? = ""
     var ref: DatabaseReference!
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var dataController: DataController!
+    var players: [Player] = []
+    var fetchedResultsController: NSFetchedResultsController<Player>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,5 +71,13 @@ class HomeViewController: UIViewController, AuthUIDelegate, UINavigationControll
         self.present(navc, animated: true, completion: nil)
 
     }
+    
+//    func frContrllerPlayers() -> [Player]? {
+//        
+//        let fetchRequest: NSFetchRequest<Player> = Player.fetchRequest()
+//        fetchRequest.sortDescriptors = []
+//        
+//        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+//        fetchedResultsController.delegate = self
+//    }
 }
-
