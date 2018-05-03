@@ -23,6 +23,7 @@
 		F752F9EB204B779D0037B698 /* MasterNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = F752F9EA204B779D0037B698 /* MasterNetwork.swift */; };
 		F752F9ED204B7C280037B698 /* RosterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F752F9EC204B7C280037B698 /* RosterVC.swift */; };
 		F785A65F209388EB00783FA7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F785A65E209388EB00783FA7 /* Constants.swift */; };
+		F7D60934209AE16100BFA091 /* TeamStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D60933209AE16100BFA091 /* TeamStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		F752F9EA204B779D0037B698 /* MasterNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterNetwork.swift; sourceTree = "<group>"; };
 		F752F9EC204B7C280037B698 /* RosterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterVC.swift; sourceTree = "<group>"; };
 		F785A65E209388EB00783FA7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F7D60933209AE16100BFA091 /* TeamStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,15 +104,8 @@
 		F752F9CA2048E3A80037B698 /* NBAstatz */ = {
 			isa = PBXGroup;
 			children = (
-				F752F9CB2048E3A80037B698 /* AppDelegate.swift */,
-				F752F9CD2048E3A80037B698 /* HomeViewController.swift */,
-				F752F9E22048F7830037B698 /* CustomAuthViewController.swift */,
-				F752F9EA204B779D0037B698 /* MasterNetwork.swift */,
-				F73808282097E2ED005D45FF /* AnimateViewController.swift */,
-				F752F9EC204B7C280037B698 /* RosterVC.swift */,
-				F785A65E209388EB00783FA7 /* Constants.swift */,
-				F73808242093FDEE005D45FF /* PlayerClass.swift */,
-				F738082620967A82005D45FF /* DataController.swift */,
+				F7D60932209ADB6400BFA091 /* Controller */,
+				F7D60931209ADB3A00BFA091 /* Model */,
 				F752F9CF2048E3A80037B698 /* Main.storyboard */,
 				F752F9D52048E3A80037B698 /* Assets.xcassets */,
 				F752F9D72048E3A80037B698 /* LaunchScreen.storyboard */,
@@ -119,6 +114,30 @@
 				F752F9E02048E41A0037B698 /* GoogleService-Info.plist */,
 			);
 			path = NBAstatz;
+			sourceTree = "<group>";
+		};
+		F7D60931209ADB3A00BFA091 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F752F9CB2048E3A80037B698 /* AppDelegate.swift */,
+				F752F9EA204B779D0037B698 /* MasterNetwork.swift */,
+				F785A65E209388EB00783FA7 /* Constants.swift */,
+				F73808242093FDEE005D45FF /* PlayerClass.swift */,
+				F7D60933209AE16100BFA091 /* TeamStruct.swift */,
+				F738082620967A82005D45FF /* DataController.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F7D60932209ADB6400BFA091 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F752F9E22048F7830037B698 /* CustomAuthViewController.swift */,
+				F73808282097E2ED005D45FF /* AnimateViewController.swift */,
+				F752F9CD2048E3A80037B698 /* HomeViewController.swift */,
+				F752F9EC204B7C280037B698 /* RosterVC.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,6 +331,7 @@
 				F752F9D42048E3A80037B698 /* NBAstatz.xcdatamodeld in Sources */,
 				F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */,
 				F73808252093FDEE005D45FF /* PlayerClass.swift in Sources */,
+				F7D60934209AE16100BFA091 /* TeamStruct.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

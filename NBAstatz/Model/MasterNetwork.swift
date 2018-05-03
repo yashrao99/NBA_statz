@@ -30,14 +30,11 @@ class MasterNetwork: NSObject {
         return components.url!
     }
     
-    
-    func getRoster(_ url: URL, completionHandlerForRoster: @escaping (_ success: Bool,_ result: [PlayerInformation]?,_ error: String?) -> Void) {
+    func standardGETRequest(_ url: URL, completionHandlerForGETRequest: @escaping (_ success: Bool, _ result: [String:AnyObject]?, _ error: String?) -> Void) {
         
-        var players : [PlayerInformation] = []
         let request = URLRequest(url: url)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) {data, response, error in
-            
             
             func displayError(_ error: String) {
                 print(error)
@@ -45,19 +42,19 @@ class MasterNetwork: NSObject {
             
             guard (error == nil) else {
                 displayError("There is an error with network request - \(error)")
-                completionHandlerForRoster(false, nil, error as? String)
+                completionHandlerForGETRequest(false, nil, error as? String)
                 return
             }
             
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 displayError("Your request returned a status code other than 2xx!")
-                completionHandlerForRoster(false, nil, error as? String)
+                completionHandlerForGETRequest(false, nil, error as? String)
                 return
             }
             
             guard let data = data else {
                 displayError("There was no data returned by the request!")
-                completionHandlerForRoster(false, nil, error as? String)
+                completionHandlerForGETRequest(false, nil, error as? String)
                 return
             }
             
@@ -65,25 +62,44 @@ class MasterNetwork: NSObject {
             
             do {
                 parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+                completionHandlerForGETRequest(true, parsedResult, nil)
             } catch {
                 displayError("Cannot display the data as JSON")
                 return
             }
-            
-            if let layerOne = parsedResult["resultSets"] as? NSArray {
-                if let layerTwo = layerOne[0] as? [String:AnyObject] {
-                    if let finalLayer = layerTwo["rowSet"] as? [NSArray] {
-                        for array in finalLayer {
-                            players.append(PlayerInformation(array: array))
-                            
-                        }
+        }
+        task.resume()
+    }
+    
+    func parseRoster(_ parsedResult: [String:AnyObject]) -> [PlayerInformation]? {
+        
+        var playerArray : [PlayerInformation] = []
+        if let layerOne = parsedResult["resultSets"] as? NSArray {
+            if let layerTwo = layerOne[0] as? [String:AnyObject] {
+                if let finalLayer = layerTwo["rowSet"] as? [NSArray] {
+                    for array in finalLayer {
+                        playerArray.append(PlayerInformation(array: array))
                     }
                 }
             }
-            completionHandlerForRoster(true, players , nil)
         }
-        task.resume()
+        return playerArray
+    }
+    
+    func parseTeam(_ parsedResult: [String:AnyObject]) -> [TeamStruct] {
         
+        var teamArray : [TeamStruct] = []
+        if let layerOne = parsedResult["resultSets"] as? NSArray {
+            let layerTwo = layerOne[0] as? [String:AnyObject]
+            let layerThree = layerTwo!["rowSet"] as? [NSArray]
+            let info = layerThree![0]
+            let otherLayerTwo = layerOne[1] as? [String:AnyObject]
+            let otherLayerThree = otherLayerTwo!["rowSet"] as? [NSArray]
+            let stats = otherLayerThree![0]
+            teamArray.append(TeamStruct(info: info, stats: stats))
+        }
+        print(teamArray)
+        return teamArray
     }
 
     class func sharedInstance() -> MasterNetwork {
