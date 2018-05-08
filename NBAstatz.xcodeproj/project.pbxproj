@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DA3E4B92B79F8D24B3E27D36 /* Pods_NBAstatz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D3BCE62DA0F6BA0A4820355 /* Pods_NBAstatz.framework */; };
-		F73808252093FDEE005D45FF /* PlayerClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808242093FDEE005D45FF /* PlayerClass.swift */; };
+		F73808252093FDEE005D45FF /* PlayerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808242093FDEE005D45FF /* PlayerStruct.swift */; };
 		F738082720967A82005D45FF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F738082620967A82005D45FF /* DataController.swift */; };
 		F73808292097E2ED005D45FF /* AnimateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808282097E2ED005D45FF /* AnimateViewController.swift */; };
 		F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F752F9CB2048E3A80037B698 /* AppDelegate.swift */; };
@@ -30,7 +30,7 @@
 		1E14D45BCB0E7DFDEBA18345 /* Pods-NBAstatz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NBAstatz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NBAstatz/Pods-NBAstatz.debug.xcconfig"; sourceTree = "<group>"; };
 		7571A15398CE46898D251469 /* Pods-NBAstatz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NBAstatz.release.xcconfig"; path = "Pods/Target Support Files/Pods-NBAstatz/Pods-NBAstatz.release.xcconfig"; sourceTree = "<group>"; };
 		8D3BCE62DA0F6BA0A4820355 /* Pods_NBAstatz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NBAstatz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F73808242093FDEE005D45FF /* PlayerClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerClass.swift; sourceTree = "<group>"; };
+		F73808242093FDEE005D45FF /* PlayerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStruct.swift; sourceTree = "<group>"; };
 		F738082620967A82005D45FF /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F73808282097E2ED005D45FF /* AnimateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateViewController.swift; sourceTree = "<group>"; };
 		F752F9C82048E3A80037B698 /* NBAstatz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBAstatz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +122,7 @@
 				F752F9CB2048E3A80037B698 /* AppDelegate.swift */,
 				F752F9EA204B779D0037B698 /* MasterNetwork.swift */,
 				F785A65E209388EB00783FA7 /* Constants.swift */,
-				F73808242093FDEE005D45FF /* PlayerClass.swift */,
+				F73808242093FDEE005D45FF /* PlayerStruct.swift */,
 				F7D60933209AE16100BFA091 /* TeamStruct.swift */,
 				F738082620967A82005D45FF /* DataController.swift */,
 			);
@@ -330,7 +330,7 @@
 				F785A65F209388EB00783FA7 /* Constants.swift in Sources */,
 				F752F9D42048E3A80037B698 /* NBAstatz.xcdatamodeld in Sources */,
 				F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */,
-				F73808252093FDEE005D45FF /* PlayerClass.swift in Sources */,
+				F73808252093FDEE005D45FF /* PlayerStruct.swift in Sources */,
 				F7D60934209AE16100BFA091 /* TeamStruct.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -34,6 +34,7 @@ class MasterNetwork: NSObject {
         
         let request = URLRequest(url: url)
         let session = URLSession.shared
+        session.configuration.timeoutIntervalForRequest = 10
         let task = session.dataTask(with: request as URLRequest) {data, response, error in
             
             func displayError(_ error: String) {
@@ -71,22 +72,68 @@ class MasterNetwork: NSObject {
         task.resume()
     }
     
-    func parseRoster(_ parsedResult: [String:AnyObject]) -> [PlayerInformation]? {
+    func parseRoster(_ parsedResult: [String:AnyObject], completionHandlerParse: @escaping (_ completeParse: Bool,_ playerInfoArray: [NSArray]) -> Void) {
         
-        var playerArray : [PlayerInformation] = []
+        var infoStructArray: [NSArray] = []
         if let layerOne = parsedResult["resultSets"] as? NSArray {
             if let layerTwo = layerOne[0] as? [String:AnyObject] {
                 if let finalLayer = layerTwo["rowSet"] as? [NSArray] {
                     for array in finalLayer {
-                        playerArray.append(PlayerInformation(array: array))
+                        infoStructArray.append(array)
                     }
                 }
             }
         }
-        return playerArray
+        completionHandlerParse(true, infoStructArray)
     }
     
-    func parseTeam(_ parsedResult: [String:AnyObject]) -> [TeamStruct] {
+    func parsePlayerStats(_ parsedResult: [String:AnyObject], _ infoStructArray : NSArray, completionHandlerPlayerStats: @escaping(_ completeParse: Bool, _ playerArray: [PlayerInformation]) -> Void) {
+        
+        var playerArray: [PlayerInformation] = []
+        var currentSznStats: NSArray!
+        var careerStats: NSArray!
+        
+        if let layerOne = parsedResult["resultSets"] as? NSArray {
+            let layerTwo = layerOne[0] as? [String:AnyObject]
+            let layerThree = layerTwo!["rowSet"] as? [NSArray]
+            for array in layerThree! {
+                if array[1] as! String  == "2017-18" {
+                     currentSznStats = array
+                }
+//                if duplicates.count != 0 || duplicates.count != 1 {
+//                    print(duplicates)
+//                    let seasonArray = duplicates[(duplicates.count-1)]
+//                } else if duplicates.count == 1 {
+//                    let seasonArray = duplicates[0]
+//
+//                }
+            }
+            let otherTwo = layerOne[1] as? [String:AnyObject]
+            let otherThree = otherTwo!["rowSet"] as? [NSArray]
+            for array in otherThree! {
+                careerStats = array
+            }
+            
+            if (infoStructArray[8] as? String) != "" {
+                if currentSznStats != nil && careerStats != nil {
+                    if (infoStructArray[0] as? Int) == (currentSznStats![0] as? Int) && (infoStructArray[0] as? Int)  == (careerStats![0] as? Int) {
+                        playerArray.append(PlayerInformation(fromRoster: infoStructArray, fromCareer: careerStats, fromSeason: currentSznStats))
+                    }
+                }
+            }
+           
+//            if let otherThree = otherTwo!["rowSet"] as? [NSArray] {
+//                let careerStats = otherThree[0]
+//            }
+//            for array in otherThree! {
+//                careerStats = array
+//
+//            }
+        }
+        completionHandlerPlayerStats(true, playerArray)
+    }
+    
+    func parseTeam(_ parsedResult: [String:AnyObject], completionHandlerParse: @escaping (_ completeParse: Bool, _ teamArray: [TeamStruct]?) -> Void) {
         
         var teamArray : [TeamStruct] = []
         if let layerOne = parsedResult["resultSets"] as? NSArray {
@@ -98,8 +145,7 @@ class MasterNetwork: NSObject {
             let stats = otherLayerThree![0]
             teamArray.append(TeamStruct(info: info, stats: stats))
         }
-        print(teamArray)
-        return teamArray
+        completionHandlerParse(true, teamArray)
     }
 
     class func sharedInstance() -> MasterNetwork {

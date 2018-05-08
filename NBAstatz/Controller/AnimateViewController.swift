@@ -25,14 +25,12 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
         return label
     }()
 
-    var rosterArray : [Player] = []
-    var teamArray : [Team] = []
+    var savedPlayerArray : [Player] = []
+    var savedTeamsArray : [Team] = []
     var rosterFetchController: NSFetchedResultsController<Player>!
     
     override func viewDidLoad() {
         configureUI()
-        rosterArray = rosterFetch()!
-        print(rosterArray.count)
         downloadEverything()
     }
     
@@ -106,9 +104,9 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
         do {
             let rosterCount = try rosterFetchController.managedObjectContext.count(for: rosterRequest)
             for index in 0..<rosterCount {
-                rosterArray.append(rosterFetchController.object(at: IndexPath(row: index, section: 0)))
+                savedPlayerArray.append(rosterFetchController.object(at: IndexPath(row: index, section: 0)))
             }
-            return rosterArray
+            return savedPlayerArray
         } catch {
             return nil
         }
@@ -117,27 +115,85 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     private func downloadRosterInformation(completionHandlerRoster: @escaping (_ success: Bool) -> Void) {
         let rosterUrl = MasterNetwork.sharedInstance().buildURL("commonallplayers", ["LeagueID":"00", "Season":"2017-18", "IsOnlyCurrentSeason": "1"])
         MasterNetwork.sharedInstance().standardGETRequest(rosterUrl) { success, result, error in
+            
             if success {
                 DispatchQueue.main.async {
                     self.shapeLayer.strokeEnd = 0
                     self.animateCircle(self.shapeLayer)
                 }
-             let roster = MasterNetwork.sharedInstance().parseRoster(result!)
-                for item in roster! {
-                    if item.city != "" {
-                        let player = Player(context: self.dataController.persistentContainer.viewContext)
-                        player.city = item.city
-                        player.name = item.name
-                        player.personID = Int64(item.personID)
-                        player.startYear = item.startYear
-                        player.team = item.team
-                        player.teamID = Int64(item.teamID)
-                        player.threeLetter = item.teamThreeLetter
-                        self.rosterArray.append(player)
+                
+                MasterNetwork.sharedInstance().parseRoster(result!) { completeParse, infoStructArray in
+                    if completeParse {
+                        for playerInfo in infoStructArray {
+                            let playerStatURL = MasterNetwork.sharedInstance().buildURL("playercareerstats", ["PerMode":"Totals", "PlayerID":"\(playerInfo[0])"])
+                            MasterNetwork.sharedInstance().standardGETRequest(playerStatURL) { success, result, error in
+                                if success {
+                                    MasterNetwork.sharedInstance().parsePlayerStats(result!, playerInfo) { completeParse, playerArray in
+                                        if completeParse {
+                                            for structPlayer in playerArray {
+                                                let player = Player(context: self.dataController.persistentContainer.viewContext)
+                                                player.age = structPlayer.age
+                                                player.careerAst = structPlayer.careerAst
+                                                player.careerBlk = structPlayer.careerBlk
+                                                player.careerDReb = structPlayer.careerDReb
+                                                player.careerFGA = structPlayer.careerFGA
+                                                player.careerFGM = structPlayer.careerFGM
+                                                player.careerFgPercent = structPlayer.careerFgPercent
+                                                player.careerFouls = structPlayer.careerFouls
+                                                player.careerFreeThrowPercent = structPlayer.careerFreeThrowPercent
+                                                player.careerftAttempt = structPlayer.careerftAttempt
+                                                player.careerftMade = structPlayer.careerftMade
+                                                player.careerGamesPlayed = structPlayer.careerGamesPlayed
+                                                player.careerGamesStarted = structPlayer.careerGamesStarted
+                                                player.careerMinutes = structPlayer.careerMinutes
+                                                player.careerOReb = structPlayer.careerOReb
+                                                player.careerPoints = structPlayer.careerPoints
+                                                player.careerStl = structPlayer.careerStl
+                                                player.careerThreeAttempt = structPlayer.careerThreeAttempt
+                                                player.careerThreeFgPercent = structPlayer.careerThreeFgPercent
+                                                player.careerThreeMade = structPlayer.careerThreeMade
+                                                player.careerTO = structPlayer.careerTO
+                                                player.careerTotalReb = structPlayer.careerTotalReb
+                                                player.city = structPlayer.city
+                                                player.currentAst = structPlayer.currentAst
+                                                player.currentBlk = structPlayer.currentBlk
+                                                player.currentDReb = structPlayer.currentDReb
+                                                player.currentFGA = structPlayer.currentFGA
+                                                player.currentFGM = structPlayer.currentFGM
+                                                player.currentFgPercent = structPlayer.currentFgPercent
+                                                player.currentFouls = structPlayer.currentFouls
+                                                player.currentFreeThrowPercent = structPlayer.currentFreeThrowPercent
+                                                player.currentGamesPlayed = structPlayer.currentGamesPlayed
+                                                player.currentGamesStarted = structPlayer.currentGamesStarted
+                                                player.currentOReb = structPlayer.currentOReb
+                                                player.currentPoints = structPlayer.currentPoints
+                                                player.currentStl = structPlayer.currentStl
+                                                player.currentSznMins = structPlayer.currentSznMins
+                                                player.currentThreeAttempt = structPlayer.currentThreeAttempt
+                                                player.currentThreeFgPercent = structPlayer.currentThreeFgPercent
+                                                player.currentThreeMade = structPlayer.currentThreeMade
+                                                player.currentTO = structPlayer.currentTO
+                                                player.currentTotalReb = structPlayer.currentTotalReb
+                                                player.ftAttempt = structPlayer.ftAttempt
+                                                player.ftMade = structPlayer.ftMade
+                                                player.name = structPlayer.name
+                                                player.personID = structPlayer.personID
+                                                player.startYear = structPlayer.startYear
+                                                player.team = structPlayer.team
+                                                player.teamID = structPlayer.teamID
+                                                player.threeLetter = structPlayer.teamThreeLetter
+                                                self.savedPlayerArray.append(player)
+                                            }
+                                        }
+                                        print(self.savedPlayerArray.count)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                try? self.dataController.persistentContainer.viewContext.save()
             }
+            try? self.dataController.persistentContainer.viewContext.save()
         }
         completionHandlerRoster(true)
     }
@@ -151,7 +207,7 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                     DispatchQueue.main.async {
                         self.changeLabel(self.label, "Saving Teams", 20, UIColor.white)
                         let replacePulse = self.createShapeLayer(UIColor.clear.cgColor, Constants.Colors.celticsPrimary.cgColor, 10)
-                        let replaceTrack = self.createShapeLayer(UIColor.lightGray.cgColor, UIColor.black.cgColor, 20)
+                        //let replaceTrack = self.createShapeLayer(UIColor.lightGray.cgColor, UIColor.black.cgColor, 20)
                         let replaceShape = self.createShapeLayer(Constants.Colors.celticsSecondary.cgColor, UIColor.clear.cgColor, 20)
                         replaceShape.strokeEnd = 0
                         self.view.layer.replaceSublayer(self.view.layer.sublayers![0], with: replacePulse)
@@ -160,31 +216,35 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                         self.animateCircle(replaceShape)
                     }
                     
-                    let teams = MasterNetwork.sharedInstance().parseTeam(result!)
-                    for item in teams {
-                        let team = Team(context: self.dataController.persistentContainer.viewContext)
-                        team.astPG = item.astPG
-                        team.astRank = item.astRank
-                        team.city = item.city
-                        team.conference = item.conference
-                        team.confRank = item.confRank
-                        team.division = item.division
-                        team.divRank = item.divRank
-                        team.losses = item.losses
-                        team.name = item.name
-                        team.oppPg = item.oppPg
-                        team.oppRank = item.oppRank
-                        team.ptsPG = item.ptsPG
-                        team.ptsRank = item.ptsRank
-                        team.rebPG = item.rebPG
-                        team.rebRank = item.rebRank
-                        team.threeLetter = item.threeLetter
-                        team.winPct = item.winPct
-                        team.wins = item.wins
-                        self.teamArray.append(team)
+                    MasterNetwork.sharedInstance().parseTeam(result!) { completeParse, teamArray in
+                        if completeParse {
+                            for item in teamArray! {
+                                let team = Team(context: self.dataController.persistentContainer.viewContext)
+                                team.astPG = item.astPG
+                                team.astRank = item.astRank
+                                team.city = item.city
+                                team.conference = item.conference
+                                team.confRank = item.confRank
+                                team.division = item.division
+                                team.divRank = item.divRank
+                                team.losses = item.losses
+                                team.name = item.name
+                                team.oppPg = item.oppPg
+                                team.oppRank = item.oppRank
+                                team.ptsPG = item.ptsPG
+                                team.ptsRank = item.ptsRank
+                                team.rebPG = item.rebPG
+                                team.rebRank = item.rebRank
+                                team.threeLetter = item.threeLetter
+                                team.winPct = item.winPct
+                                team.wins = item.wins
+                                self.savedTeamsArray.append(team)
+                            }
+                        }
+                        print(self.savedTeamsArray.count)
                     }
                 }
-                try? self.dataController.viewContext.save()
+                try? self.dataController.persistentContainer.viewContext.save()
             }
         }
         completionHandlerTeam(true)
