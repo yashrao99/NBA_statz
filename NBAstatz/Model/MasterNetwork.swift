@@ -34,7 +34,7 @@ class MasterNetwork: NSObject {
         
         let request = URLRequest(url: url)
         let session = URLSession.shared
-        session.configuration.timeoutIntervalForRequest = 10
+        session.configuration.timeoutIntervalForRequest = 120
         let task = session.dataTask(with: request as URLRequest) {data, response, error in
             
             func displayError(_ error: String) {
@@ -100,13 +100,6 @@ class MasterNetwork: NSObject {
                 if array[1] as! String  == "2017-18" {
                      currentSznStats = array
                 }
-//                if duplicates.count != 0 || duplicates.count != 1 {
-//                    print(duplicates)
-//                    let seasonArray = duplicates[(duplicates.count-1)]
-//                } else if duplicates.count == 1 {
-//                    let seasonArray = duplicates[0]
-//
-//                }
             }
             let otherTwo = layerOne[1] as? [String:AnyObject]
             let otherThree = otherTwo!["rowSet"] as? [NSArray]
@@ -121,16 +114,21 @@ class MasterNetwork: NSObject {
                     }
                 }
             }
-           
-//            if let otherThree = otherTwo!["rowSet"] as? [NSArray] {
-//                let careerStats = otherThree[0]
-//            }
-//            for array in otherThree! {
-//                careerStats = array
-//
-//            }
         }
         completionHandlerPlayerStats(true, playerArray)
+    }
+    
+    func parseGame(_ parsedResult: [String:AnyObject], completionHandlerParse: @escaping (_ completeParse: Bool,_ gameArray: [GameStruct]) -> Void) {
+        
+        var gameArray : [GameStruct] = []
+        if let layerOne = parsedResult["resultSets"] as? NSArray {
+            let layerTwo = layerOne[1] as? [String:AnyObject]
+            let layerThree = layerTwo!["rowSet"] as? [NSArray]
+            let awayTeam = layerThree![0]
+            let homeTeam = layerThree![1]
+            gameArray.append(GameStruct(away: awayTeam, home: homeTeam))
+        }
+        completionHandlerParse(true, gameArray)
     }
     
     func parseTeam(_ parsedResult: [String:AnyObject], completionHandlerParse: @escaping (_ completeParse: Bool, _ teamArray: [TeamStruct]?) -> Void) {

@@ -27,6 +27,7 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
 
     var savedPlayerArray : [Player] = []
     var savedTeamsArray : [Team] = []
+    var savedGamesArray: [Game] = []
     var rosterFetchController: NSFetchedResultsController<Player>!
     
     override func viewDidLoad() {
@@ -126,11 +127,14 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                     if completeParse {
                         for playerInfo in infoStructArray {
                             let playerStatURL = MasterNetwork.sharedInstance().buildURL("playercareerstats", ["PerMode":"Totals", "PlayerID":"\(playerInfo[0])"])
+                           
                             MasterNetwork.sharedInstance().standardGETRequest(playerStatURL) { success, result, error in
                                 if success {
+                                    
                                     MasterNetwork.sharedInstance().parsePlayerStats(result!, playerInfo) { completeParse, playerArray in
                                         if completeParse {
                                             for structPlayer in playerArray {
+                                                
                                                 let player = Player(context: self.dataController.persistentContainer.viewContext)
                                                 player.age = structPlayer.age
                                                 player.careerAst = structPlayer.careerAst
@@ -203,6 +207,7 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
             let teamUrl = MasterNetwork.sharedInstance().buildURL("teaminfocommon", ["LeagueID":"00", "Season":"2017-18", "TeamID": "\(ID)"])
             
             MasterNetwork.sharedInstance().standardGETRequest(teamUrl) {success, result, error in
+                
                 if success {
                     DispatchQueue.main.async {
                         self.changeLabel(self.label, "Saving Teams", 20, UIColor.white)
@@ -241,26 +246,92 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                                 self.savedTeamsArray.append(team)
                             }
                         }
-                        print(self.savedTeamsArray.count)
                     }
                 }
                 try? self.dataController.persistentContainer.viewContext.save()
+                print(self.savedTeamsArray.count)
             }
         }
         completionHandlerTeam(true)
     }
     
-    private func downloadEverything() {
-        
-        downloadRosterInformation() { success in
-            if success {
-                self.downloadTeamInfo() { success in
-                    if success {
-                        print("YEE")
+    private func downloadAllGames(completionHandlerGames: @escaping (_ success: Bool) -> Void) {
+        for i in 1...1230 {
+            let gameURL = MasterNetwork.sharedInstance().buildURL("boxscoreplayertrackv2", ["GameID":"002170" + String(format: "%04d", i)])
+            
+            MasterNetwork.sharedInstance().standardGETRequest(gameURL) { success, result, error in
+                if success {
+                    MasterNetwork.sharedInstance().parseGame(result!) { completeParse, gameArray in
+                        if success {
+                            for gs in gameArray {
+                                let game = Game(context: self.dataController.persistentContainer.viewContext)
+                                game.awayCity = gs.awayCity
+                                game.awayContestFGA = gs.awayContestFGA
+                                game.awayContestFGM = gs.awayContestFGM
+                                game.awayContestFGP = gs.awayContestFGP
+                                game.awayDRebChance = gs.awayDRebChance
+                                game.awayFGPct = gs.awayFGPct
+                                game.awayFTAst = gs.awayFTAst
+                                game.awayOppBadShotAttempt = gs.awayOppBadShotAttempt
+                                game.awayOppBadShotFGP = gs.awayOppBadShotFGP
+                                game.awayOppBadShotMade = gs.awayOppBadShotMade
+                                game.awayORebChance = gs.awayORebChance
+                                game.awaySecondaryAst = gs.awaySecondaryAst
+                                game.awayTeam = gs.awayTeam
+                                game.awayTeamID = gs.awayTeamID
+                                game.awayTotalAssist = gs.awayTotalAssist
+                                game.awayTotalPasses = gs.awayTotalPasses
+                                game.awayUncontestFGA = gs.awayUncontestFGA
+                                game.awayUncontestFGM = gs.awayUncontestFGM
+                                game.awayUncontestFGP = gs.awayUncontestFGP
+                                game.homeCity = gs.homeCity
+                                game.homeContestFGA = gs.homeContestFGA
+                                game.homeContestFGM = gs.homeContestFGM
+                                game.homeContestFGP = gs.homeContestFGP
+                                game.homeDRebChance = gs.homeDRebChance
+                                game.homeFGPct = gs.homeFGPct
+                                game.homeFTAst = gs.homeFTAst
+                                game.homeOppBadShotFGP = gs.homeOppBadShotFGP
+                                game.homeOppBadShotMade = gs.homeOppBadShotMade
+                                game.homeOppBadShotAttempt = gs.homeOppBadShotAttempt
+                                game.homeORebChance = gs.homeORebChance
+                                game.homeSecondaryAst = gs.homeSecondaryAst
+                                game.homeTeam = gs.homeTeam
+                                game.homeTeamID = gs.homeTeamID
+                                game.homeTotalAssist = gs.homeTotalAssist
+                                game.homeTotalPasses = gs.homeTotalPasses
+                                game.homeUncontestFGA = gs.homeUncontestFGA
+                                game.homeUncontestFGM = gs.homeUncontestFGM
+                                game.homeUncontestFGP = gs.homeUncontestFGP
+                                self.savedGamesArray.append(game)
+                            }
+                        }
                     }
                 }
+                try? self.dataController.persistentContainer.viewContext.save()
+                print(self.savedGamesArray.count)
             }
         }
+        completionHandlerGames(true)
+    }
+    
+    private func downloadEverything() {
+        
+        downloadAllGames() { success in
+            if success {
+                print("yee")
+            }
+        }
+        
+//        downloadRosterInformation() { success in
+//            if success {
+//                self.downloadTeamInfo() { success in
+//                    if success {
+//                        print("YEE")
+//                    }
+//                }
+//            }
+//        }
         
     }
     

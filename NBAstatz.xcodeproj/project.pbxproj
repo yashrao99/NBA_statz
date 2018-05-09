@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DA3E4B92B79F8D24B3E27D36 /* Pods_NBAstatz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D3BCE62DA0F6BA0A4820355 /* Pods_NBAstatz.framework */; };
+		F7268C7720A2BAEB00CC6D40 /* GameStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7268C7620A2BAEB00CC6D40 /* GameStruct.swift */; };
 		F73808252093FDEE005D45FF /* PlayerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808242093FDEE005D45FF /* PlayerStruct.swift */; };
 		F738082720967A82005D45FF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F738082620967A82005D45FF /* DataController.swift */; };
 		F73808292097E2ED005D45FF /* AnimateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808282097E2ED005D45FF /* AnimateViewController.swift */; };
@@ -30,6 +31,7 @@
 		1E14D45BCB0E7DFDEBA18345 /* Pods-NBAstatz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NBAstatz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NBAstatz/Pods-NBAstatz.debug.xcconfig"; sourceTree = "<group>"; };
 		7571A15398CE46898D251469 /* Pods-NBAstatz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NBAstatz.release.xcconfig"; path = "Pods/Target Support Files/Pods-NBAstatz/Pods-NBAstatz.release.xcconfig"; sourceTree = "<group>"; };
 		8D3BCE62DA0F6BA0A4820355 /* Pods_NBAstatz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NBAstatz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7268C7620A2BAEB00CC6D40 /* GameStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStruct.swift; sourceTree = "<group>"; };
 		F73808242093FDEE005D45FF /* PlayerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStruct.swift; sourceTree = "<group>"; };
 		F738082620967A82005D45FF /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F73808282097E2ED005D45FF /* AnimateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				F785A65E209388EB00783FA7 /* Constants.swift */,
 				F73808242093FDEE005D45FF /* PlayerStruct.swift */,
 				F7D60933209AE16100BFA091 /* TeamStruct.swift */,
+				F7268C7620A2BAEB00CC6D40 /* GameStruct.swift */,
 				F738082620967A82005D45FF /* DataController.swift */,
 			);
 			path = Model;
@@ -327,6 +330,7 @@
 				F752F9EB204B779D0037B698 /* MasterNetwork.swift in Sources */,
 				F752F9ED204B7C280037B698 /* RosterVC.swift in Sources */,
 				F738082720967A82005D45FF /* DataController.swift in Sources */,
+				F7268C7720A2BAEB00CC6D40 /* GameStruct.swift in Sources */,
 				F785A65F209388EB00783FA7 /* Constants.swift in Sources */,
 				F752F9D42048E3A80037B698 /* NBAstatz.xcdatamodeld in Sources */,
 				F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */,
