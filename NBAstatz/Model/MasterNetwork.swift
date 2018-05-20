@@ -34,7 +34,7 @@ class MasterNetwork: NSObject {
         
         let request = URLRequest(url: url)
         let session = URLSession.shared
-        session.configuration.timeoutIntervalForRequest = 120
+        session.configuration.timeoutIntervalForRequest = 6000
         let task = session.dataTask(with: request as URLRequest) {data, response, error in
             
             func displayError(_ error: String) {

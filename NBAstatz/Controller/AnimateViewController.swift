@@ -26,8 +26,13 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     }()
 
     var savedPlayerArray : [Player] = []
+    var playerArrayCount : Int!
     var savedTeamsArray : [Team] = []
+    var teamArrayCount: Int!
     var savedGamesArray: [Game] = []
+    var gameArrayCount: Int!
+    
+    
     var rosterFetchController: NSFetchedResultsController<Player>!
     
     override func viewDidLoad() {
@@ -133,6 +138,8 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                                     
                                     MasterNetwork.sharedInstance().parsePlayerStats(result!, playerInfo) { completeParse, playerArray in
                                         if completeParse {
+                                            
+                                            self.playerArrayCount = playerArray.count
                                             for structPlayer in playerArray {
                                                 
                                                 let player = Player(context: self.dataController.persistentContainer.viewContext)
@@ -199,7 +206,9 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
             }
             try? self.dataController.persistentContainer.viewContext.save()
         }
-        completionHandlerRoster(true)
+        if savedPlayerArray.count == playerArrayCount {
+            completionHandlerRoster(true)
+        }
     }
     
     private func downloadTeamInfo(completionHandlerTeam: @escaping (_ success: Bool) -> Void) {
@@ -223,6 +232,8 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                     
                     MasterNetwork.sharedInstance().parseTeam(result!) { completeParse, teamArray in
                         if completeParse {
+                            self.teamArrayCount = teamArray?.count
+                            
                             for item in teamArray! {
                                 let team = Team(context: self.dataController.persistentContainer.viewContext)
                                 team.astPG = item.astPG
@@ -252,7 +263,9 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                 print(self.savedTeamsArray.count)
             }
         }
-        completionHandlerTeam(true)
+        if teamArrayCount == savedTeamsArray.count {
+            completionHandlerTeam(true)
+        }
     }
     
     private func downloadAllGames(completionHandlerGames: @escaping (_ success: Bool) -> Void) {
@@ -263,6 +276,8 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                 if success {
                     MasterNetwork.sharedInstance().parseGame(result!) { completeParse, gameArray in
                         if success {
+                            self.gameArrayCount = gameArray.count
+                            
                             for gs in gameArray {
                                 let game = Game(context: self.dataController.persistentContainer.viewContext)
                                 game.awayCity = gs.awayCity
@@ -312,26 +327,27 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                 print(self.savedGamesArray.count)
             }
         }
-        completionHandlerGames(true)
+        if gameArrayCount == savedGamesArray.count {
+            completionHandlerGames(true)
+        }
     }
     
     private func downloadEverything() {
         
-        downloadAllGames() { success in
+        downloadRosterInformation() { success in
             if success {
-                print("yee")
+                self.downloadTeamInfo() { success in
+                    if success {
+                        print("YEE")
+                        self.downloadAllGames() { success in
+                            if success {
+                                print("Donezo")
+                            }
+                        }
+                    }
+                }
             }
         }
-        
-//        downloadRosterInformation() { success in
-//            if success {
-//                self.downloadTeamInfo() { success in
-//                    if success {
-//                        print("YEE")
-//                    }
-//                }
-//            }
-//        }
         
     }
     
