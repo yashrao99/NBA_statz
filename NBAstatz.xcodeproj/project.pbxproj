@@ -12,6 +12,8 @@
 		F73808252093FDEE005D45FF /* PlayerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808242093FDEE005D45FF /* PlayerStruct.swift */; };
 		F738082720967A82005D45FF /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F738082620967A82005D45FF /* DataController.swift */; };
 		F73808292097E2ED005D45FF /* AnimateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73808282097E2ED005D45FF /* AnimateViewController.swift */; };
+		F73C411C20C895D100F09BC0 /* TeamSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73C411B20C895D100F09BC0 /* TeamSelectViewController.swift */; };
+		F73C412220C904A400F09BC0 /* TeamCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73C412120C904A400F09BC0 /* TeamCollectionCell.swift */; };
 		F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F752F9CB2048E3A80037B698 /* AppDelegate.swift */; };
 		F752F9CE2048E3A80037B698 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F752F9CD2048E3A80037B698 /* HomeViewController.swift */; };
 		F752F9D12048E3A80037B698 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F752F9CF2048E3A80037B698 /* Main.storyboard */; };
@@ -35,6 +37,8 @@
 		F73808242093FDEE005D45FF /* PlayerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStruct.swift; sourceTree = "<group>"; };
 		F738082620967A82005D45FF /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F73808282097E2ED005D45FF /* AnimateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateViewController.swift; sourceTree = "<group>"; };
+		F73C411B20C895D100F09BC0 /* TeamSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSelectViewController.swift; sourceTree = "<group>"; };
+		F73C412120C904A400F09BC0 /* TeamCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCollectionCell.swift; sourceTree = "<group>"; };
 		F752F9C82048E3A80037B698 /* NBAstatz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBAstatz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F752F9CB2048E3A80037B698 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F752F9CD2048E3A80037B698 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -136,9 +140,11 @@
 			isa = PBXGroup;
 			children = (
 				F752F9E22048F7830037B698 /* CustomAuthViewController.swift */,
+				F73C411B20C895D100F09BC0 /* TeamSelectViewController.swift */,
 				F73808282097E2ED005D45FF /* AnimateViewController.swift */,
 				F752F9CD2048E3A80037B698 /* HomeViewController.swift */,
 				F752F9EC204B7C280037B698 /* RosterVC.swift */,
+				F73C412120C904A400F09BC0 /* TeamCollectionCell.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -324,6 +330,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F73C412220C904A400F09BC0 /* TeamCollectionCell.swift in Sources */,
 				F73808292097E2ED005D45FF /* AnimateViewController.swift in Sources */,
 				F752F9CE2048E3A80037B698 /* HomeViewController.swift in Sources */,
 				F752F9E32048F7830037B698 /* CustomAuthViewController.swift in Sources */,
@@ -333,6 +340,7 @@
 				F7268C7720A2BAEB00CC6D40 /* GameStruct.swift in Sources */,
 				F785A65F209388EB00783FA7 /* Constants.swift in Sources */,
 				F752F9D42048E3A80037B698 /* NBAstatz.xcdatamodeld in Sources */,
+				F73C411C20C895D100F09BC0 /* TeamSelectViewController.swift in Sources */,
 				F752F9CC2048E3A80037B698 /* AppDelegate.swift in Sources */,
 				F73808252093FDEE005D45FF /* PlayerStruct.swift in Sources */,
 				F7D60934209AE16100BFA091 /* TeamStruct.swift in Sources */,

@@ -61,6 +61,11 @@ struct Constants {
         
         static let AllTeams = [TeamID.Bucks, TeamID.Bucks, TeamID.Cavaliers, TeamID.Celtics, TeamID.Clippers, TeamID.Grizzlies, TeamID.Hawks, TeamID.Heat, TeamID.Hornets, TeamID.Jazz, TeamID.Kings, TeamID.Knicks, TeamID.Lakers, TeamID.Magic, TeamID.Mavericks, TeamID.Nets, TeamID.Nuggets, TeamID.Pacers, TeamID.Pelicans, TeamID.Pistons, TeamID.Raptors, TeamID.Rockets, TeamID.Sixers, TeamID.Spurs, TeamID.Suns, TeamID.Thunder, TeamID.Timberwolves, TeamID.Trailblazers, TeamID.Warriors, TeamID.Wizards]
     }
+    
+    struct teamArray {
+        static let teams = ["blazers", "bucks", "bulls", "cavs", "celtics", "clipper", "grizzlies", "hawks", "heat", "hotnets", "jazz", "kings", "knicks", "lakers", "magic", "mavs", "nets", "nuggets", "pacers", "pelicans", "pistons", "raptors", "rockets", "sixers", "spurs", "suns", "thunder", "warriors", "wizards", "wolves"]
+
+    }
 }
 
 extension UIColor {

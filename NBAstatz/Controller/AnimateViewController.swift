@@ -18,7 +18,7 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     
     let label: UILabel = {
         let label = UILabel()
-        label.text = "Initializing Data"
+        label.text = "Initial Setup"
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = UIColor.white
@@ -33,11 +33,14 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     var gameArrayCount: Int!
     
     
-    var rosterFetchController: NSFetchedResultsController<Player>!
+    var teamFetchController: NSFetchedResultsController<Team>!
+    
+    @IBOutlet weak var confirmButton: UIButton!
     
     override func viewDidLoad() {
         configureUI()
         downloadEverything()
+        //rosterFetch()
     }
     
     fileprivate func createShapeLayer(_ strokeColor: CGColor,_ fillColor: CGColor,_ lineWidth: CGFloat) -> CAShapeLayer {
@@ -92,30 +95,38 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
         label.frame = CGRect(x: 0, y: 0, width: 150, height: 100)
         label.center = view.center
         
+        //confirmButton.isHidden = true
+       // confirmButton.isEnabled = false
+        confirmButton.backgroundColor = Constants.Colors.lakersPrimary
+        confirmButton.setTitleColor(Constants.Colors.lakersSecondary, for: .normal)
+        
     }
     
-    private func rosterFetch() -> [Player]? {
-        let rosterRequest: NSFetchRequest<Player> = Player.fetchRequest()
+    private func rosterFetch() -> [Team]? {
+        let rosterRequest: NSFetchRequest<Team> = Team.fetchRequest()
         rosterRequest.sortDescriptors = []
         
-        rosterFetchController = NSFetchedResultsController(fetchRequest: rosterRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        rosterFetchController.delegate = self
+        teamFetchController = NSFetchedResultsController(fetchRequest: rosterRequest, managedObjectContext: dataController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        teamFetchController.delegate = self
         
         do {
-            try rosterFetchController.performFetch()
+            try teamFetchController.performFetch()
         } catch {
             fatalError("Fetch cannot be completed: \(error.localizedDescription)")
         }
         
         do {
-            let rosterCount = try rosterFetchController.managedObjectContext.count(for: rosterRequest)
+            let rosterCount = try teamFetchController.managedObjectContext.count(for: rosterRequest)
             for index in 0..<rosterCount {
-                savedPlayerArray.append(rosterFetchController.object(at: IndexPath(row: index, section: 0)))
+                savedTeamsArray.append(teamFetchController.object(at: IndexPath(row: index, section: 0)))
             }
-            return savedPlayerArray
+            return savedTeamsArray
         } catch {
-            return nil
+            //return nil
+            downloadEverything()
+            return savedTeamsArray
         }
+        print(savedTeamsArray.count)
     }
     
     private func downloadRosterInformation(completionHandlerRoster: @escaping (_ success: Bool) -> Void) {
@@ -123,10 +134,6 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
         MasterNetwork.sharedInstance().standardGETRequest(rosterUrl) { success, result, error in
             
             if success {
-                DispatchQueue.main.async {
-                    self.shapeLayer.strokeEnd = 0
-                    self.animateCircle(self.shapeLayer)
-                }
                 
                 MasterNetwork.sharedInstance().parseRoster(result!) { completeParse, infoStructArray in
                     if completeParse {
@@ -135,7 +142,7 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                            
                             MasterNetwork.sharedInstance().standardGETRequest(playerStatURL) { success, result, error in
                                 if success {
-                                    
+                                
                                     MasterNetwork.sharedInstance().parsePlayerStats(result!, playerInfo) { completeParse, playerArray in
                                         if completeParse {
                                             
@@ -212,23 +219,23 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     }
     
     private func downloadTeamInfo(completionHandlerTeam: @escaping (_ success: Bool) -> Void) {
+        
+        DispatchQueue.main.async {
+            self.shapeLayer.strokeEnd = 0
+            self.animateCircle(self.shapeLayer)
+            }
+        
         for ID in Constants.TeamID.AllTeams {
             let teamUrl = MasterNetwork.sharedInstance().buildURL("teaminfocommon", ["LeagueID":"00", "Season":"2017-18", "TeamID": "\(ID)"])
             
             MasterNetwork.sharedInstance().standardGETRequest(teamUrl) {success, result, error in
                 
                 if success {
-                    DispatchQueue.main.async {
-                        self.changeLabel(self.label, "Saving Teams", 20, UIColor.white)
-                        let replacePulse = self.createShapeLayer(UIColor.clear.cgColor, Constants.Colors.celticsPrimary.cgColor, 10)
-                        //let replaceTrack = self.createShapeLayer(UIColor.lightGray.cgColor, UIColor.black.cgColor, 20)
-                        let replaceShape = self.createShapeLayer(Constants.Colors.celticsSecondary.cgColor, UIColor.clear.cgColor, 20)
-                        replaceShape.strokeEnd = 0
-                        self.view.layer.replaceSublayer(self.view.layer.sublayers![0], with: replacePulse)
-                        self.view.layer.replaceSublayer(self.view.layer.sublayers![2], with: replaceShape)
-                        self.animatePulsatingLayer(replacePulse)
-                        self.animateCircle(replaceShape)
-                    }
+                   
+//                    DispatchQueue.main.async {
+//                        self.shapeLayer.strokeEnd = 0
+//                        self.animateCircle(self.shapeLayer)
+//                    }
                     
                     MasterNetwork.sharedInstance().parseTeam(result!) { completeParse, teamArray in
                         if completeParse {
@@ -263,9 +270,10 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
                 print(self.savedTeamsArray.count)
             }
         }
-        if teamArrayCount == savedTeamsArray.count {
+        print("Roster completion")
+       // if savedTeamsArray.count > 25 {
             completionHandlerTeam(true)
-        }
+       // }
     }
     
     private func downloadAllGames(completionHandlerGames: @escaping (_ success: Bool) -> Void) {
@@ -334,21 +342,49 @@ class AnimateViewController: UIViewController, NSFetchedResultsControllerDelegat
     
     private func downloadEverything() {
         
-        downloadRosterInformation() { success in
+        downloadTeamInfo() { success in
             if success {
-                self.downloadTeamInfo() { success in
-                    if success {
-                        print("YEE")
-                        self.downloadAllGames() { success in
-                            if success {
-                                print("Donezo")
-                            }
-                        }
-                    }
-                }
+                self.confirmButton.isHidden = false
+                //self.confirmButton.isEnabled = true
+//                print("starting players")
+//                self.downloadRosterInformation() { success in
+//                    if success {
+//                        print("YEE")
+//                        self.downloadAllGames() { success in
+//                            if success {
+//                                print("Donezo")
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
         
+    }
+    
+    private func replacePulseLayers(_ inner: CGColor,_ outer: CGColor) {
+        
+        DispatchQueue.main.async {
+            self.changeLabel(self.label, "Saving Teams", 20, UIColor.white)
+            let replacePulse = self.createShapeLayer(UIColor.clear.cgColor, inner, 10)
+            //let replaceTrack = self.createShapeLayer(UIColor.lightGray.cgColor, UIColor.black.cgColor, 20)
+            let replaceShape = self.createShapeLayer(outer, UIColor.clear.cgColor, 20)
+            replaceShape.strokeEnd = 0
+            self.view.layer.replaceSublayer(self.view.layer.sublayers![0], with: replacePulse)
+            self.view.layer.replaceSublayer(self.view.layer.sublayers![2], with: replaceShape)
+            self.animatePulsatingLayer(replacePulse)
+            self.animateCircle(replaceShape)
+        }
+    }
+    
+    @IBAction func continueDownload(_ sender: UIButton) {
+        performSegue(withIdentifier: "test", sender: self)
+//        self.replacePulseLayers(Constants.Colors.celticsPrimary.cgColor, Constants.Colors.celticsSecondary.cgColor)
+//        self.downloadRosterInformation() { success in
+//            if success {
+//                print("Suh")
+//            }
+//        }
     }
     
     func changeLabel(_ label: UILabel,_ text: String, _ size: CGFloat, _ color: UIColor) {
